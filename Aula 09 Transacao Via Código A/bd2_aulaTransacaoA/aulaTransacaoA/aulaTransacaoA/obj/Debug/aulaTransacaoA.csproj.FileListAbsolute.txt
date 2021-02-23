@@ -1,0 +1,8 @@
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\bin\Debug\aulaTransacaoA.exe
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\bin\Debug\aulaTransacaoA.pdb
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\obj\Debug\aulaTransacaoA.csprojResolveAssemblyReference.cache
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\obj\Debug\aulaTransacaoA.Form1.resources
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\obj\Debug\aulaTransacaoA.Properties.Resources.resources
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\obj\Debug\aulaTransacaoA.csproj.GenerateResource.Cache
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\obj\Debug\aulaTransacaoA.exe
+D:\Fontes\csharp\bd2_aulaTransacaoA\aulaTransacaoA\aulaTransacaoA\obj\Debug\aulaTransacaoA.pdb
