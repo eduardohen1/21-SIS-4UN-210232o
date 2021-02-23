@@ -61,7 +61,24 @@ namespace aulaTransacaoA.Controller
         }
 
         //Método Desconectar do banco de dados
-
+        public bool desconectar()
+        {
+            try
+            {
+                //testar se a variável conexão está ativa
+                if (conexao.State == System.Data.ConnectionState.Open)
+                    conexao.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao desconectar com o banco de dados: " + ex.ToString(),
+                                    "Aplicação",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                return false;
+            }
+        }
 
     }
 }
