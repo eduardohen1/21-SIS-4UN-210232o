@@ -10,7 +10,7 @@ namespace aulaTransacaoB.Controller
 {
     public class ConexaoBD
     {
-        MySqlConnection conexao = new MySqlConnection(); //variável de conexão com o BD
+        public MySqlConnection conexao = new MySqlConnection(); //variável de conexão com o BD
         DadosConexao dadosConexao = null; //variável de dados da conexão
 
         //Método construtor:
