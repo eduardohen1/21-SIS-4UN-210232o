@@ -66,8 +66,14 @@ namespace aulaTransacaoA
                     {
                         while (dr.Read())
                         {
-                            comboBox1.Items.Add(dr["nome"].ToString().ToUpper());
+                            //comboBox1.Items.Add(dr["nome"].ToString().ToUpper() + "                                                         " + 
+                            //                    int.Parse(dr["id_pessoa"].ToString()).ToString("D6"));
+                            ComboboxItem item = new ComboboxItem();
+                            item.Text = dr["nome"].ToString().ToUpper();
+                            item.Value = dr["id_pessoa"].ToString();
+                            comboBox1.Items.Add(item);
                         }
+                        MessageBox.Show("Pesquisa concluída!", "Aplicação", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     }
                     dr.Dispose();
                     dr.Close();
@@ -86,5 +92,62 @@ namespace aulaTransacaoA
                                     MessageBoxIcon.Error);
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.SelectedIndex >= 0)
+            {
+                ComboboxItem item = (comboBox1.SelectedItem as ComboboxItem);
+                //MessageBox.Show("Id_pessoa: " + item.Value.ToString(),"Aplicação",MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    DadosConexao dadosConexao = new DadosConexao("localhost", "root", "123456", "escola", 3306);
+                    ConexaoBD conexaoBD = new ConexaoBD(dadosConexao);
+                    if (conexaoBD.conectar())
+                    {
+                        string sql = "select *, func_idade(dt_nascimento) idade from pessoa where id_pessoa = " + item.Value.ToString();
+                        MySqlCommand comando = new MySqlCommand(sql, conexaoBD.conexao);
+                        MySqlDataReader dr = comando.ExecuteReader();
+                        if (dr.HasRows)
+                        {
+                            while (dr.Read())
+                            {
+                                string resposta = "A pessoa " + item.Text + " tem " + dr["idade"].ToString() + " anos de idade.";
+                                MessageBox.Show(resposta, "Aplicação", MessageBoxButtons.OK, MessageBoxIcon.Hand);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao buscar idade de pessoas no banco de dados: " + ex.ToString(),
+                                    "Aplicação",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nenhum registro selecionado.", "Aplicação", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
+
+    //criar objeto comboboxItem
+    public class ComboboxItem
+    {
+        public string Text { get; set; }
+        public object Value { get; set; }
+        public override string ToString()
+        {
+            return Text;
+        }
+
+    }
+
 }
