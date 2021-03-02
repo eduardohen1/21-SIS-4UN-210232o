@@ -134,7 +134,78 @@ namespace aulaTransacaoA
 
         private void button4_Click(object sender, EventArgs e)
         {
+            MySqlTransaction transacao = null;
+            bool iniTransacao = false;
+            DadosConexao dadosConexao = new DadosConexao("localhost", "root", "123456", "escola", 3306);
+            ConexaoBD conexaoBD = new ConexaoBD(dadosConexao);
+            if (comboBox1.SelectedIndex >= 0)
+            {
+                try
+                {
+                    ComboboxItem item = (comboBox1.SelectedItem as ComboboxItem);
+                    if (conexaoBD.conectar())
+                    {
+                        transacao = conexaoBD.conexao.BeginTransaction(IsolationLevel.RepeatableRead);
+                        iniTransacao = true;
+                        //testar se a pessoa já é aluno
+                        string sql = "SELECT COUNT(*) qte FROM aluno WHERE id_pessoa = " + item.Value.ToString();
+                        MySqlCommand comando = new MySqlCommand(sql, conexaoBD.conexao);
+                        MySqlDataReader dr = comando.ExecuteReader();
+                        if (dr.HasRows)
+                        {
+                            while (dr.Read())
+                            {
+                                int qte = int.Parse(dr["qte"].ToString());
+                                if (qte > 0)
+                                {
+                                    MessageBox.Show("Esta pessoa já é aluno. Verifique!", "Aplicação", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    iniTransacao = false;
+                                }
+                            }
+                        }
+                        dr.Dispose();
+                        dr.Close();
 
+                        //criar mensagem para testar transação:
+                        sql = "INSERT INTO mensagens(id_aluno, dt_mensagem, mensagem) VALUES(1, now(), 'OI!');";
+                        comando = new MySqlCommand(sql, conexaoBD.conexao);
+                        comando.ExecuteNonQuery();
+
+                        //caso não for, inserir:
+                        if (iniTransacao)
+                        {
+                            sql = "INSERT INTO aluno(dt_cadastro, id_pessoa) VALUES(now(), " + item.Value.ToString() + ")";
+                            comando = new MySqlCommand(sql, conexaoBD.conexao);
+                            comando.ExecuteNonQuery();
+                            transacao.Commit();
+                            MessageBox.Show("Pessoa " + item.Text.ToString() + " inserida como aluno.", "Aplicação", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            transacao.Rollback();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Erro ao inserir novo aluno!\n" + ex.ToString(),
+                                    "Aplicação",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                    if (iniTransacao)
+                    {
+                        transacao.Rollback();
+                    }
+                }
+                finally
+                {
+                    conexaoBD.desconectar();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nenhum registro selecionado.", "Aplicação", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
     }
 
